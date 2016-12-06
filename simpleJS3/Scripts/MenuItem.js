@@ -4,12 +4,11 @@
         const shadowRoot = this.attachShadow({ mode: 'closed' });
         shadowRoot.innerHTML = `
           <style>
-              :host { display: flex; background-color:red; height:3rem;}
-              .red-div { display: inline-block; height:100%;  width:100%; padding:0.5rem;}              
+              .menu-item { display: inline-block; height:3rem;  width:100%; padding:0.5rem; border-bottom:1px solid gray;}              
           </style>
-          <div class="red-div"></div>
+          <div class="menu-item"></div>
       `;
-        this.item = shadowRoot.querySelector('.red-div');
+        this.item = shadowRoot.querySelector('.menu-item');
     }
 
     static get observedAttributes() { return ['title']; }

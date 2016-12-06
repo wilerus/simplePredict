@@ -4,10 +4,8 @@ class CustomProgressBar extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: 'closed' });
         shadowRoot.innerHTML = `
           <style>
-              :host { flex:1; }
-              .menu-container { width:100%; background-color:rgba(10,10,255,0.5); height:100%; padding:1rem;}
-          </style>
-          
+              .menu-container {flex:1; width:100%; background-color:white; height:100%; padding:1rem;}
+          </style>          
           <div class="menu-container"></div>
       `;
         this.menuContainer = shadowRoot.querySelector('.menu-container');
