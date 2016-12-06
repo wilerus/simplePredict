@@ -157,15 +157,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Application.js" />
-    <Content Include="Scripts\ApplicationInput.js" />
-    <Content Include="Scripts\DrawingCanvas.js" />
-    <Content Include="Scripts\MenuItem.js" />
-    <Content Include="Scripts\ApplicationMenu.js" />
+    <Content Include="Scripts\form\ApplicationInput.js" />
+    <Content Include="Scripts\form\DrawingCanvas.js" />
+    <Content Include="Scripts\menu\MenuItem.js" />
+    <Content Include="Scripts\menu\ApplicationMenu.js" />
     <Content Include="Scripts\PredictionModule.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -177,11 +173,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
