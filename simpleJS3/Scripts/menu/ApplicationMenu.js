@@ -1,10 +1,10 @@
-class CustomProgressBar extends HTMLElement {
+class ApplicationMenu extends HTMLElement {
     constructor() {
         super();
         const shadowRoot = this.attachShadow({ mode: 'closed' });
         shadowRoot.innerHTML = `
           <style>
-              .menu-container {flex:1; width:100%; background-color:white; height:100%; padding:1rem;}
+              .menu-container {flex-direction: column; display: flex; width:100%; background-color:white; height:100%; padding:1rem;}
           </style>          
           <div class="menu-container"></div>
       `;
@@ -30,4 +30,4 @@ class CustomProgressBar extends HTMLElement {
     get model() { return this.getAttribute('model'); }
     set model(newValue) { this.setAttribute('model', newValue); }
 };
-customElements.define('custom-progress-bar', CustomProgressBar);
+customElements.define('application-menu', ApplicationMenu);
