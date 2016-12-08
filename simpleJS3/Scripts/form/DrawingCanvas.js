@@ -39,6 +39,14 @@ class DrawingCanvas extends HTMLElement {
             this.canvas.removeEventListener('mousemove', __onPaint, false);
         }, false);
     }
+
+    getCanvasData() {
+        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    reset() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
 };
 
 customElements.define('drawing-canvas', DrawingCanvas);
