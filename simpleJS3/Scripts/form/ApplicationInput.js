@@ -4,7 +4,7 @@ class ApplicationInput extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: 'closed' });
         shadowRoot.innerHTML = `
           <style>
-              :host { display: flex; flex:1; background-color:red; flex-direction:column;}
+              :host { display: flex; flex:1; flex-direction:column;}
               .button {width:56px; height:26px;}
               .button-group {display:flex; flex-direction:row; justify-content: space-around;}
           </style>

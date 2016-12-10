@@ -32,6 +32,7 @@ class DrawingCanvas extends HTMLElement {
         this.canvas.addEventListener('mousedown', e => {
             this.ctx.beginPath();
             this.ctx.moveTo(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+            this.ctx.stroke();
             this.canvas.addEventListener('mousemove', __onPaint, false);
         }, false);
 
