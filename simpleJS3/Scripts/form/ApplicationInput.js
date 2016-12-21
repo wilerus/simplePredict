@@ -9,19 +9,26 @@ class ApplicationInput extends HTMLElement {
               .button-group {display:flex; flex-direction:row; justify-content: space-around;}
           </style>
           <drawing-canvas class='drawing-canvas'></drawing-canvas>
-          <div class='button-group'>
+          <form class='button-group'>
             <button class='button save'>Save</button>
             <button class='button redraw'>Redraw</button>
+          </form>
+          <form class='button-group'>
             <button class='button train'>Train</button>
-          </div>
+            <span class=''>X</span>
+            <input class='input trainCount' type='number' value=100>
+            <span class=''>Like</span>
+            <input class=''></button>
+          </form>
       `;
         this.saveButton = shadowRoot.querySelector('.save');
         this.redrawButton = shadowRoot.querySelector('.redraw');
         this.trainButton = shadowRoot.querySelector('.train');
+        this.trainCountInput = shadowRoot.querySelector('.trainCount');
         this.drawingCanvas = shadowRoot.querySelector('.drawing-canvas');
         this.saveButton.addEventListener('click', this.__saveCurrentFigure.bind(this));
         this.redrawButton.addEventListener('click', this.__redrawCanvas.bind(this));
-        this.trainButton.addEventListener('click', this.__train.bind(this));
+        this.trainButton.addEventListener('click', this.__trainMultileTimes.bind(this));
         this.__initPrediction();
     }
 
@@ -114,8 +121,8 @@ class ApplicationInput extends HTMLElement {
         return fx * (1 - fx);
     }
 
-    doTimes(func, count) {
-        for (let i = 0; i < count; i ++) func();
+    __trainMultileTimes() {
+        for (let i = 0; i < this.trainCountInput.value; i ++) this.__train();
     }
 
     __applyTrainUpdate(weight_deltas) {
