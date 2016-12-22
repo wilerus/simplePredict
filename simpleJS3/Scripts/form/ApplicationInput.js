@@ -36,11 +36,13 @@ class ApplicationInput extends HTMLElement {
         this.__initPrediction();
     }
 
-    __saveCurrentFigure() {
+    __saveCurrentFigure(event) {
+        event.preventDefault();
         const drawData = this.drawingCanvas.getCanvasData();
     }
 
-    __redrawCanvas() {
+    __redrawCanvas(event) {
+        event.preventDefault();
         this.drawingCanvas.reset();
     }
 
@@ -125,8 +127,9 @@ class ApplicationInput extends HTMLElement {
         return fx * (1 - fx);
     }
 
-    __trainMultileTimes() {
-        for (let i = 0; i < this.trainCountInput.value; i ++) this.__train();
+    __trainMultileTimes(event) {
+        event.preventDefault();
+        for (let i = 0; i < this.trainCountInput.value; i++) this.__train();
     }
 
     __applyTrainUpdate(weight_deltas) {
