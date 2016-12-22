@@ -18,13 +18,17 @@ class ApplicationInput extends HTMLElement {
             <span class=''>X</span>
             <input class='input trainCount' type='number' value=100>
             <span class=''>Like</span>
-            <input class=''></button>
+            <input class=''>
+          </form>
+          <form class='button-group'>
+            <input class='trainErrorOutput'>
           </form>
       `;
         this.saveButton = shadowRoot.querySelector('.save');
         this.redrawButton = shadowRoot.querySelector('.redraw');
         this.trainButton = shadowRoot.querySelector('.train');
         this.trainCountInput = shadowRoot.querySelector('.trainCount');
+        this.trainErrorOutputInput = shadowRoot.querySelector('.trainErrorOutput');
         this.drawingCanvas = shadowRoot.querySelector('.drawing-canvas');
         this.saveButton.addEventListener('click', this.__saveCurrentFigure.bind(this));
         this.redrawButton.addEventListener('click', this.__redrawCanvas.bind(this));
@@ -66,35 +70,35 @@ class ApplicationInput extends HTMLElement {
             bias_o1: 0,
         };
 
-        for (var {input: [i1, i2], output} of this.data) {
-            var h1_input =
+        for (const {input: [i1, i2], output} of this.data) {
+            const h1_input =
                 this.weights.i1_h1 * i1 +
                 this.weights.i2_h1 * i2 +
                 this.weights.bias_h1;
-            var h1 = this.__activation_sigmoid(h1_input);
 
-            var h2_input =
+            const h2_input =
                 this.weights.i1_h2 * i1 +
                 this.weights.i2_h2 * i2 +
                 this.weights.bias_h2;
-            var h2 = this.__activation_sigmoid(h2_input);
 
+            const normalized_h1 = this.__activation_sigmoid(h1_input);
+            const normalized_h2 = this.__activation_sigmoid(h2_input);
 
-            var o1_input =
-                this.weights.h1_o1 * h1 +
-                this.weights.h2_o1 * h2 +
+            const o1_input =
+                this.weights.h1_o1 * normalized_h1 +
+                this.weights.h2_o1 * normalized_h2 +
                 this.weights.bias_o1;
 
-            var o1 = this.__activation_sigmoid(o1_input);
-            
+            const normalized_o1 = this.__activation_sigmoid(o1_input);            
     
-            var delta = output - o1;
-            console.log(delta);
+            const expectationDelta = output - normalized_o1;
 
-            var o1_delta = delta * this.__derivative_sigmoid(o1_input);
+            this.__updateDisplayedTrainingError(expectationDelta);
 
-            weight_deltas.h1_o1 += h1 * o1_delta;
-            weight_deltas.h2_o1 += h2 * o1_delta;
+            var o1_delta = expectationDelta * this.__derivative_sigmoid(o1_input);
+
+            weight_deltas.h1_o1 += normalized_h1 * o1_delta;
+            weight_deltas.h2_o1 += normalized_h2 * o1_delta;
             weight_deltas.bias_o1 += o1_delta;
 
             var h1_delta = o1_delta * this.__derivative_sigmoid(h1_input);
@@ -149,6 +153,10 @@ class ApplicationInput extends HTMLElement {
             h2_o1: Math.random(),
             bias_o1: Math.random(),
         };
+    }
+
+    __updateDisplayedTrainingError(tranningError) {
+        this.trainErrorOutputInput.value = tranningError;
     }
 }
 

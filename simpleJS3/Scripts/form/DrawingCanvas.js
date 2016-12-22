@@ -36,9 +36,7 @@ class DrawingCanvas extends HTMLElement {
             this.canvas.addEventListener('mousemove', __onPaint, false);
         }, false);
 
-        this.canvas.addEventListener('mouseup', () => {
-            this.canvas.removeEventListener('mousemove', __onPaint, false);
-        }, false);
+        this.canvas.addEventListener('mouseup', () => this.canvas.removeEventListener('mousemove', __onPaint, false), false);
     }
 
     getCanvasData() {
