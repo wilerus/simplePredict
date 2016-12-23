@@ -6,7 +6,8 @@ class ApplicationInput extends HTMLElement {
           <style>
               :host { display: flex; flex:1; flex-direction:column;}
               .button {width:56px; height:26px;}
-              .button-group {display:flex; flex-direction:row; justify-content: space-around;}
+              .button-group {display:flex; flex-direction:row; justify-content: space-around; width:100%;}
+              .trainErrorOutput{width:100%;}
           </style>
           <drawing-canvas class='drawing-canvas'></drawing-canvas>
           <form class='button-group'>
@@ -60,24 +61,14 @@ class ApplicationInput extends HTMLElement {
     }
 
     __train() {
-        const weight_deltas = {
-            i1_h1: 0,
-            i2_h1: 0,
-            bias_h1: 0,
-            i1_h2: 0,
-            i2_h2: 0,
-            bias_h2: 0,
-            h1_o1: 0,
-            h2_o1: 0,
-            bias_o1: 0,
-        };
+        const outputData = [];
 
         for (const {input: [i1, i2], output} of this.data) {
             const h1_input =
                 this.weights.i1_h1 * i1 +
                 this.weights.i2_h1 * i2 +
                 this.weights.bias_h1;
-
+            
             const h2_input =
                 this.weights.i1_h2 * i1 +
                 this.weights.i2_h2 * i2 +
@@ -94,28 +85,25 @@ class ApplicationInput extends HTMLElement {
             const normalized_o1 = this.__activation_sigmoid(o1_input);            
     
             const expectationDelta = output - normalized_o1;
+            outputData.push(expectationDelta.toFixed(4));
+            const o1_delta = expectationDelta * this.__derivative_sigmoid(o1_input);
+            
+            this.weights.h1_o1 += normalized_h1 * o1_delta;
+            this.weights.h2_o1 += normalized_h2 * o1_delta;
+            this.weights.bias_o1 += o1_delta;
 
-            this.__updateDisplayedTrainingError(expectationDelta);
+            const h1_delta = o1_delta * this.__derivative_sigmoid(h1_input);
+            const h2_delta = o1_delta * this.__derivative_sigmoid(h2_input);
 
-            var o1_delta = expectationDelta * this.__derivative_sigmoid(o1_input);
+            this.weights.i1_h1 += i1 * h1_delta;
+            this.weights.i2_h1 += i2 * h1_delta;
+            this.weights.bias_h1 += h1_delta;
 
-            weight_deltas.h1_o1 += normalized_h1 * o1_delta;
-            weight_deltas.h2_o1 += normalized_h2 * o1_delta;
-            weight_deltas.bias_o1 += o1_delta;
-
-            var h1_delta = o1_delta * this.__derivative_sigmoid(h1_input);
-            var h2_delta = o1_delta * this.__derivative_sigmoid(h2_input);
-
-            weight_deltas.i1_h1 += i1 * h1_delta;
-            weight_deltas.i2_h1 += i2 * h1_delta;
-            weight_deltas.bias_h1 += h1_delta;
-
-            weight_deltas.i1_h2 += i1 * h2_delta;
-            weight_deltas.i2_h2 += i2 * h2_delta;
-            weight_deltas.bias_h2 += h2_delta;
+            this.weights.i1_h2 += i1 * h2_delta;
+            this.weights.i2_h2 += i2 * h2_delta;
+            this.weights.bias_h2 += h2_delta;
         }
-        console.log('\n');
-        this.__applyTrainUpdate(weight_deltas);
+        this.__updateDisplayedTrainingError(outputData.join(' : '));
     }
 
     __activation_sigmoid(x) {
@@ -130,11 +118,6 @@ class ApplicationInput extends HTMLElement {
     __trainMultileTimes(event) {
         event.preventDefault();
         for (let i = 0; i < this.trainCountInput.value; i++) this.__train();
-    }
-
-    __applyTrainUpdate(weight_deltas) {
-        Object.keys(this.weights).forEach(key =>
-            this.weights[key] += weight_deltas[key]);
     }
 
     __initPrediction() {
