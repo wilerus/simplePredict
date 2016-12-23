@@ -4,7 +4,7 @@ class ApplicationMenu extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: 'closed' });
         shadowRoot.innerHTML = `
           <style>
-              .menu-container {flex-direction: column; display: flex; width:100%; background-color:white; height:100%; padding:1rem;}
+              .menu-container {flex-direction: column; display: flex; width:100%; background-color:white; height:100%; padding:1rem; box-sizing: border-box;}
           </style>          
           <div class="menu-container"></div>
       `;

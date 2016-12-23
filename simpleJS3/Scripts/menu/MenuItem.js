@@ -4,7 +4,7 @@
         const shadowRoot = this.attachShadow({ mode: 'closed' });
         shadowRoot.innerHTML = `
           <style>
-              .menu-item { display: inline-block; height:3rem;  width:100%; padding:0.5rem; border-bottom:1px solid gray;}              
+              .menu-item { display: inline-block; height:3rem; flex: 1; padding:0.5rem; border-bottom:1px solid gray; display: block;}              
           </style>
           <div class="menu-item"></div>
       `;
