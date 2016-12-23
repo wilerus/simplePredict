@@ -87,7 +87,7 @@ class ApplicationInput extends HTMLElement {
             const expectationDelta = output - normalized_o1;
             outputData.push(expectationDelta.toFixed(4));
             const o1_delta = expectationDelta * this.__derivative_sigmoid(o1_input);
-            
+            debugger
             this.weights.h1_o1 += normalized_h1 * o1_delta;
             this.weights.h2_o1 += normalized_h2 * o1_delta;
             this.weights.bias_o1 += o1_delta;
