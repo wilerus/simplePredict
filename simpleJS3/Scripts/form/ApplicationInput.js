@@ -85,9 +85,8 @@ class ApplicationInput extends HTMLElement {
             const normalized_o1 = this.__activation_sigmoid(o1_input);            
     
             const expectationDelta = output - normalized_o1;
-            outputData.push(expectationDelta.toFixed(4));
             const o1_delta = expectationDelta * this.__derivative_sigmoid(o1_input);
-            debugger
+            
             this.weights.h1_o1 += normalized_h1 * o1_delta;
             this.weights.h2_o1 += normalized_h2 * o1_delta;
             this.weights.bias_o1 += o1_delta;
@@ -102,8 +101,9 @@ class ApplicationInput extends HTMLElement {
             this.weights.i1_h2 += i1 * h2_delta;
             this.weights.i2_h2 += i2 * h2_delta;
             this.weights.bias_h2 += h2_delta;
+            outputData.push(parseFloat(expectationDelta.toPrecision(4)));
         }
-        this.__updateDisplayedTrainingError(outputData.join(' : '));
+        this.__updateDisplayedTrainingError(`${outputData.join(' : ')} error: ${(outputData.reduce((a, b) => a + b) / 4).toPrecision(4)}`);
     }
 
     __activation_sigmoid(x) {
