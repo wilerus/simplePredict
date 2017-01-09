@@ -32,12 +32,10 @@ class MainApplication extends HTMLElement {
     ]
   }'></application-menu>
 <application-input><application-input>
-</div>
-      `;
-      this.addEventListener('canvas:received:drawData', function (e, drawData) {
-        debugger
+</div>`;
+
+      document.addEventListener('canvas:received:drawData', (e, drawData) => {
         this.recognizeImage(drawData);
-          // e.target соотетствует объекту document
     }, false);
     }
 

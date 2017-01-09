@@ -41,7 +41,7 @@ class DrawingCanvas extends HTMLElement {
 
     getCanvasData() {
         return { pixelmap: this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height),
-                dimentions: this.canvas.width, this.canvas.height };
+            dimentions: { width: this.canvas.width, height: this.canvas.height }};
     }
 
     reset() {

@@ -35,14 +35,12 @@ class ApplicationInput extends HTMLElement {
         this.redrawButton.addEventListener('click', this.__redrawCanvas.bind(this));
         this.trainButton.addEventListener('click', this.__trainMultileTimes.bind(this));
         this.__initPrediction();
-        this.event = document.createEvent('Event');
-        this.event.initEvent('canvas:received:drawData', true, true);
     }
 
     __saveCurrentFigure(event) {
         event.preventDefault();
         const drawData = this.drawingCanvas.getCanvasData();
-        document.dispatchEvent(this.event, drawData);
+        document.dispatchEvent(new CustomEvent('canvas:received:drawData', drawData));
     }
 
     __redrawCanvas(event) {
