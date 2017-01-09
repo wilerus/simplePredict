@@ -35,11 +35,14 @@ class ApplicationInput extends HTMLElement {
         this.redrawButton.addEventListener('click', this.__redrawCanvas.bind(this));
         this.trainButton.addEventListener('click', this.__trainMultileTimes.bind(this));
         this.__initPrediction();
+        this.event = document.createEvent('Event');
+        this.event.initEvent('canvas:received:drawData', true, true);
     }
 
     __saveCurrentFigure(event) {
         event.preventDefault();
         const drawData = this.drawingCanvas.getCanvasData();
+        document.dispatchEvent(this.event, drawData);
     }
 
     __redrawCanvas(event) {
@@ -48,7 +51,7 @@ class ApplicationInput extends HTMLElement {
     }
 
     __outputResults(weight_deltas) {
-        
+
         this.data.forEach(({input: [i1, i2], output: y}, i) =>
             console.log(`${i1} XOR ${i2} => ${weight_deltas[i]} (expected ${y})`));
     }
@@ -68,7 +71,7 @@ class ApplicationInput extends HTMLElement {
                 this.weights.i1_h1 * i1 +
                 this.weights.i2_h1 * i2 +
                 this.weights.bias_h1;
-            
+
             const h2_input =
                 this.weights.i1_h2 * i1 +
                 this.weights.i2_h2 * i2 +
@@ -82,11 +85,11 @@ class ApplicationInput extends HTMLElement {
                 this.weights.h2_o1 * normalized_h2 +
                 this.weights.bias_o1;
 
-            const normalized_o1 = this.__activation_sigmoid(o1_input);            
-    
+            const normalized_o1 = this.__activation_sigmoid(o1_input);
+
             const expectationDelta = output - normalized_o1;
             const o1_delta = expectationDelta * this.__derivative_sigmoid(o1_input);
-            
+
             this.weights.h1_o1 += normalized_h1 * o1_delta;
             this.weights.h2_o1 += normalized_h2 * o1_delta;
             this.weights.bias_o1 += o1_delta;

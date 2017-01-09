@@ -34,6 +34,40 @@ class MainApplication extends HTMLElement {
 <application-input><application-input>
 </div>
       `;
+      this.addEventListener('canvas:received:drawData', function (e, drawData) {
+        debugger
+        this.recognizeImage(drawData);
+          // e.target соотетствует объекту document
+    }, false);
+    }
+
+    recognizeImage(drawData) {
+      const reducedImageData = this.reduceImage(drawData);
+      this.predictionsModue.recognizeImage(reducedImageData);
+    }
+
+    reduceImage(drawData) {
+      const cropedDrawData = this.removeEmptyColumnAndRows(drawData);
+      return this.interpolateImageData(cropedDrawData);
+    }
+
+    removeEmptyColumnAndRows(drawData) {
+      const emptyRowsData = this.calculateEmptyRowsAndColumn(drawData);
+      return this.cropImage(drawData, emptyRowsData);
+    }
+
+    interpolatedImageData(imageData) {
+       const pixelmap = imageData.pixelmap;
+       const imageDimentions = imageData.dimentions;
+    }
+
+    calculateEmptyRowsAndColumn(imageDimentions) {
+
+    }
+
+    cropImage(drawData, emptyRowsData) {
+      const pixelmap = imageData.pixelmap;
+      const imageDimentions = imageData.dimentions;
     }
 };
 customElements.define('main-application', MainApplication);

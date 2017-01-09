@@ -5,17 +5,17 @@ class DrawingCanvas extends HTMLElement {
         shadowRoot.innerHTML = `
           <style>
               :host { display: flex;  height:100%; width:100%; align-items: center; align-content: center; }
-              .drawingCanvas { display: inline-block; background-color:white; height:100%;  width:100%;}              
+              .drawingCanvas { display: inline-block; background-color:white; height:100%;  width:100%;}
           </style>
           <canvas class='drawingCanvas' id="myCanvas"></canvas>
       `;
         this.canvas = shadowRoot.querySelector('#myCanvas');
-        this.__initCanvas();        
+        this.__initCanvas();
     }
 
     __initCanvas() {
         this.ctx = this.canvas.getContext('2d');
-        
+
         this.canvas.width = this.canvas.getBoundingClientRect().width;
         this.canvas.height = this.canvas.getBoundingClientRect().height;
 
@@ -40,7 +40,8 @@ class DrawingCanvas extends HTMLElement {
     }
 
     getCanvasData() {
-        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        return { pixelmap: this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height),
+                dimentions: this.canvas.width, this.canvas.height };
     }
 
     reset() {
