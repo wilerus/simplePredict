@@ -104,7 +104,7 @@ class ApplicationInput extends HTMLElement {
     __saveCurrentFigure(event) {
         event.preventDefault();
         const drawData = this.drawingCanvas.getCanvasData();
-        document.dispatchEvent(new CustomEvent('canvas:received:drawData', drawData));
+        document.dispatchEvent(new CustomEvent('canvas:received:drawData', {'detail': drawData}));
     }
 
     __redrawCanvas(event) {
