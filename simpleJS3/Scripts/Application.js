@@ -1,3 +1,8 @@
+/**
+ * Application start point
+ * @constructor
+ */
+
 class MainApplication extends HTMLElement {
     constructor() {
         super();
@@ -32,8 +37,38 @@ class MainApplication extends HTMLElement {
     ]
   }'></application-menu>
 <application-input><application-input>
-</div>
-      `;
+</div>`;
+
+      document.addEventListener('canvas:received:drawData', e => this.recognizeImage(e.detail), false);
+    }
+
+    recognizeImage(drawData) {
+      const reducedImageData = this.reduceImage(drawData);
+      //this.predictionsModule.recognizeImage(reducedImageData);
+    }
+
+    reduceImage(drawData) {
+      const croppedDrawData = this.removeEmptyColumnAndRows(drawData);
+      return this.interpolateImageData(croppedDrawData);
+    }
+
+    static removeEmptyColumnAndRows(drawData) {
+      const emptyRowsData = this.calculateEmptyRowsAndColumn(drawData);
+      return this.cropImage(drawData, emptyRowsData);
+    }
+
+    static interpolateImageData(imageData) {
+       const pixelmap = imageData.pixelmap;
+       const imageDimentions = imageData.dimentions;
+    }
+
+    static calculateEmptyRowsAndColumn(imageDimentions) {
+
+    }
+
+    cropImage(drawData, emptyRowsData) {
+      const pixelmap = imageData.pixelmap;
+      const imageDimentions = imageData.dimentions;
     }
 };
 customElements.define('main-application', MainApplication);

@@ -33,13 +33,13 @@ class ApplicationInput extends HTMLElement {
         this.drawingCanvas = shadowRoot.querySelector('.drawing-canvas');
         this.saveButton.addEventListener('click', this.__saveCurrentFigure.bind(this));
         this.redrawButton.addEventListener('click', this.__redrawCanvas.bind(this));
-        this.trainButton.addEventListener('click', this.__trainMultileTimes.bind(this));
+        this.trainButton.addEventListener('click', this.__trainMultipleTimes.bind(this));
         const trainBlobUrl = URL.createObjectURL(new Blob(['(',
-            function (trainTimes) { //make map!!
+            function () { //make map!!
                 onmessage = data => {
                     const trainTimes = data.data[0],
                         inputData = data.data[1],
-                        weights = data.data[2]
+                        weights = data.data[2],
                         outputData = [];
 
                     activationSigmoid = x => {
@@ -52,6 +52,7 @@ class ApplicationInput extends HTMLElement {
                     };
 
                     for (let i = 0; i < trainTimes; i++) {
+                        outputData.length = 0;
                         for (const {input: [i1, i2], output} of inputData) {
                             const h1_input =
                                 weights.i1_h1 * i1 +
@@ -93,7 +94,11 @@ class ApplicationInput extends HTMLElement {
                             outputData.push(parseFloat(expectationDelta.toPrecision(4)));
                         }
                     };
-                    postMessage(`${outputData.join(' : ')} error: ${(outputData.reduce((a, b) => a + b) / 4).toPrecision(4)}`);
+                    debugger
+                    postMessage({
+                        outputData: `${outputData.join(' : ')} error: ${(outputData.reduce((a, b) => a + b) / 4).toPrecision(4)}`,
+                        weights
+                    });
                 }
             }.toString(),
             ')()'], { type: 'application/javascript' }));
@@ -104,6 +109,7 @@ class ApplicationInput extends HTMLElement {
     __saveCurrentFigure(event) {
         event.preventDefault();
         const drawData = this.drawingCanvas.getCanvasData();
+        document.dispatchEvent(new CustomEvent('canvas:received:drawData', {'detail': drawData}));
     }
 
     __redrawCanvas(event) {
@@ -111,22 +117,13 @@ class ApplicationInput extends HTMLElement {
         this.drawingCanvas.reset();
     }
 
-    __outputResults(weight_deltas) {        
-        this.data.forEach(({input: [i1, i2], output: y}, i) =>
-            console.log(`${i1} XOR ${i2} => ${weight_deltas[i]} (expected ${y})`));
-    }
-
-    __calculateResults() {
-        const resultsList = this.data.map(({input: [i1, i2], output: y}) => Math.pow(y - nn(i1, i2), 2));
-        const resultsListLength = resultsList.length;
-
-        return resultsList.reduce((a, b) => a + b) / resultsListLength;
-    }
-
-    __trainMultileTimes(event) {
+    __trainMultipleTimes(event) {
         event.preventDefault();
-        this.trainWorker.postMessage([this.trainCountInput.value, this.data, this.weights]);    
-        //this.__updateDisplayedTrainingError();   
+        this.trainWorker.postMessage([this.trainCountInput.value, this.data, this.weights]);
+        this.trainWorker.onmessage = e => {
+            this.__updateDisplayedTrainingError(e.data.outputData);
+            this.weights = e.data.weights;
+        };
     }
 
     __initPrediction() {
