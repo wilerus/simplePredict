@@ -66,9 +66,24 @@ class MainApplication extends HTMLElement {
 
     }
 
-    cropImage(drawData, emptyRowsData) {
-      const pixelmap = imageData.pixelmap;
-      const imageDimentions = imageData.dimentions;
+    static cropImage(drawData, emptyRowsData) {
+        const pixelmap = imageData.pixelmap;
+        const imageDimentionsWidth = imageData.dimentions.width - 1;
+        const freeRowsFromLeft = 0;
+        const freeRowsFromRight = 0;
+        const freeColumnsFromTop = 0;
+        const freeColumnsFromBottom = 0;
+
+      for (let pixelMapPosition = 0; pixelMapPosition < pixelmap.length; pixelMapPosition++) {
+          let columnPosition = pixelMapPosition / imageDimentionsWidth;
+          if (this.__isEmpty(pixelmap[pixelMapPosition])) {
+              pixelMapPosition > freeRowsFromLeft && freeRowsFromLeft = pixelMapPosition;
+          }
+      }
+    }
+
+    static __isEmpty(pixel) {
+        debugger
     }
 };
 customElements.define('main-application', MainApplication);

@@ -1,1 +1,4 @@
 /.vs/simpleJS3/v15/*.suo
+/simpleJS3/obj/Debug/*.cache
+/simpleJS3/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/.vs/config/applicationhost.config
