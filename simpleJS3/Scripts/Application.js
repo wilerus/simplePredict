@@ -52,38 +52,50 @@ class MainApplication extends HTMLElement {
       return this.interpolateImageData(croppedDrawData);
     }
 
-    static removeEmptyColumnAndRows(drawData) {
+    removeEmptyColumnAndRows(drawData) {
       const emptyRowsData = this.calculateEmptyRowsAndColumn(drawData);
       return this.cropImage(drawData, emptyRowsData);
     }
 
-    static interpolateImageData(imageData) {
+    interpolateImageData(imageData) {
        const pixelmap = imageData.pixelmap;
        const imageDimentions = imageData.dimentions;
     }
 
-    static calculateEmptyRowsAndColumn(imageDimentions) {
+    calculateEmptyRowsAndColumn(imageData) {
+        const pixelmap = imageData.data;
+        const imageDimentionsWidth = imageData.width;
+        let freeRowsFromLeft = imageDimentionsWidth;
+        let freeRowsFromRight = 0;
+        let freeColumnsFromTop = 0;
+        let freeColumnsFromBottom = 0;
 
+        for (let pixelMapPosition = 0; pixelMapPosition < pixelmap.length; pixelMapPosition+=4) {
+            const columnPosition = Math.floor(pixelMapPosition / imageDimentionsWidth);
+            if (this.__isFilled(pixelmap.slice(pixelMapPosition, pixelMapPosition + 4))) {
+                if (pixelMapPosition - columnPosition * imageDimentionsWidth < freeRowsFromLeft) {
+                    freeRowsFromLeft = pixelMapPosition - columnPosition * imageDimentionsWidth;
+                }
+                if (pixelMapPosition - columnPosition * imageDimentionsWidth > freeRowsFromRight) {
+                    freeRowsFromRight = pixelMapPosition - columnPosition * imageDimentionsWidth;
+                }
+            }
+        }
+        return { freeRowsFromLeft, freeRowsFromRight, freeColumnsFromTop, freeColumnsFromBottom };
     }
 
-    static cropImage(drawData, emptyRowsData) {
-        const pixelmap = imageData.pixelmap;
-        const imageDimentionsWidth = imageData.dimentions.width - 1;
-        const freeRowsFromLeft = 0;
-        const freeRowsFromRight = 0;
-        const freeColumnsFromTop = 0;
-        const freeColumnsFromBottom = 0;
-
-      for (let pixelMapPosition = 0; pixelMapPosition < pixelmap.length; pixelMapPosition++) {
-          let columnPosition = pixelMapPosition / imageDimentionsWidth;
-          if (this.__isEmpty(pixelmap[pixelMapPosition])) {
-              pixelMapPosition > freeRowsFromLeft && freeRowsFromLeft = pixelMapPosition;
-          }
-      }
+    cropImage(imageData, emptyRowsData) {
+        const pixelmap = imageData.data;
+        const imageDimentionsWidth = imageData.width;
+        return pixelmap.filter((value, index) => {
+            let currentPosition = Math.floor(index / 4);
+            let columnPosition = Math.floor(index / imageDimentionsWidth);
+            return currentPosition > emptyRowsData.freeRowsFromLeft || currentPosition > emptyRowsData.freeRowsFromRight;
+        });
     }
 
-    static __isEmpty(pixel) {
-        debugger
+    __isFilled(pixel) {
+        return pixel.some(property => property !== 0);
     }
 };
 customElements.define('main-application', MainApplication);
