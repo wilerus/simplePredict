@@ -2,8 +2,8 @@
 /simpleJS3/obj/Debug/*.cache
 /simpleJS3/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 /.vs/config/applicationhost.config
-/simpleJS3/obj/Debug/simpleJS3.csprojResolveAssemblyReference.cache
-/simpleJS3/obj/Debug/simpleJS3.dll
-/simpleJS3/obj/Debug/simpleJS3.pdb
+/simpleJS3/obj/Debug/*.*
+/.idea
+/simpleJS3/Scripts/.idea
 /simpleJS3/bin/simpleJS3.dll
 /simpleJS3/bin/simpleJS3.pdb
