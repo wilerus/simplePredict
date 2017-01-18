@@ -74,9 +74,9 @@ class MainApplication extends HTMLElement {
         let oldColumnPosition = 0;
 
         for (let pixelMapPosition = 0; pixelMapPosition < pixelmap.length; pixelMapPosition+=4) {
-            const columnPosition = Math.floor(pixelMapPosition / imageDimentionsWidth);
+            const columnPosition = Math.floor(pixelMapPosition / imageDimentionsWidth / 4);
             if (oldColumnPosition !== columnPosition) {
-                if (isRowEmpty) {
+                if (isRowEmpty && oldColumnPosition - freeColumnsFromTop === 1) {
                     freeColumnsFromTop = oldColumnPosition;
                 }
                 oldColumnPosition = columnPosition;
@@ -84,11 +84,11 @@ class MainApplication extends HTMLElement {
             }
             if (this.__isFilled(pixelmap.slice(pixelMapPosition, pixelMapPosition + 4))) {
                 isRowEmpty = false;
-                const matrixPosition = pixelMapPosition - columnPosition * imageDimentionsWidth;
-                if (matrixPosition < freeRowsFromLeft) { //todo fix one row slap
+                const matrixPosition = pixelMapPosition / 4 - columnPosition * imageDimentionsWidth;
+                if (freeRowsFromLeft - matrixPosition === 1 || freeRowsFromLeft === imageDimentionsWidth) { //todo fix one row slap
                     freeRowsFromLeft = matrixPosition;
                 }
-                if (matrixPosition > freeRowsFromRight) {
+                if (matrixPosition - freeRowsFromRight === 1 || freeRowsFromRight === 0) {
                     freeRowsFromRight = matrixPosition;
                 }
             }
