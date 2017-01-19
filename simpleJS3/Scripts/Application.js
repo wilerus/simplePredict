@@ -66,18 +66,24 @@ class MainApplication extends HTMLElement {
     calculateEmptyRowsAndColumn(imageData) {
         const pixelmap = imageData.data;
         const imageDimentionsWidth = imageData.width;
-        let freeRowsFromLeft = imageDimentionsWidth;
         let isRowEmpty = true;
+
+        let freeRowsFromLeft = imageDimentionsWidth;
         let freeRowsFromRight = 0;
-        let freeColumnsFromTop = -1;
+        let freeColumnsFromTop = imageData.height;
         let freeColumnsFromBottom = 0;
         let oldColumnPosition = 0;
 
         for (let pixelMapPosition = 0; pixelMapPosition < pixelmap.length; pixelMapPosition+=4) {
             const columnPosition = Math.floor(pixelMapPosition / imageDimentionsWidth / 4);
             if (oldColumnPosition !== columnPosition) {
-                if (isRowEmpty && oldColumnPosition - freeColumnsFromTop === 1) {
-                    freeColumnsFromTop = oldColumnPosition;
+                if (!isRowEmpty) {
+                    if (freeColumnsFromTop > oldColumnPosition) {
+                        freeColumnsFromTop = oldColumnPosition - 1 > 0 ? oldColumnPosition - 1 : 0;
+                    }
+                    if (freeColumnsFromBottom < oldColumnPosition) {
+                        freeColumnsFromBottom = oldColumnPosition + 1 < imageData.height ? oldColumnPosition + 1 : oldColumnPosition;
+                    }
                 }
                 oldColumnPosition = columnPosition;
                 isRowEmpty = true;
@@ -85,11 +91,11 @@ class MainApplication extends HTMLElement {
             if (this.__isFilled(pixelmap.slice(pixelMapPosition, pixelMapPosition + 4))) {
                 isRowEmpty = false;
                 const matrixPosition = pixelMapPosition / 4 - columnPosition * imageDimentionsWidth;
-                if (freeRowsFromLeft - matrixPosition === 1 || freeRowsFromLeft === imageDimentionsWidth) { //todo fix one row slap
-                    freeRowsFromLeft = matrixPosition;
+                if (matrixPosition < freeRowsFromLeft) {
+                    freeRowsFromLeft = matrixPosition - 1 > 0 ? matrixPosition - 1 : 0;
                 }
-                if (matrixPosition - freeRowsFromRight === 1 || freeRowsFromRight === 0) {
-                    freeRowsFromRight = matrixPosition;
+                if (matrixPosition > freeRowsFromRight) {
+                    freeRowsFromRight = matrixPosition + 1 < imageDimentionsWidth ? matrixPosition + 1 : imageDimentionsWidth;
                 }
             }
         }
