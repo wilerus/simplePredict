@@ -106,10 +106,14 @@ class MainApplication extends HTMLElement {
         const pixelmap = imageData.data;
         const imageDimentionsWidth = imageData.width;
 
-        return pixelmap.filter((value, index) => {
-            let currentPosition = Math.floor(index / 4);
-            let columnPosition = Math.floor(index / imageDimentionsWidth);
-            return currentPosition > emptyRowsData.freeRowsFromLeft || currentPosition > emptyRowsData.freeRowsFromRight;
+        return pixelmap.filter((value, pixelMapPosition) => {
+            const columnPosition = Math.floor(pixelMapPosition / imageDimentionsWidth / 4);
+            const currentPosition = Math.floor(pixelMapPosition / 4 - columnPosition * imageDimentionsWidth);
+                       
+            return currentPosition > emptyRowsData.freeRowsFromLeft &&
+                currentPosition < emptyRowsData.freeRowsFromRight &&
+                columnPosition > emptyRowsData.freeColumnsFromTop &&
+                columnPosition < emptyRowsData.freeColumnsFromBottom;
         });
     }
 
